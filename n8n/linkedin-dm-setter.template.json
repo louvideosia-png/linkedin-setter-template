@@ -1,0 +1,1005 @@
+{
+  "name": "LinkedIn DM Setter [Template]",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "linkedin-dm-webhook",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -2992,
+        112
+      ],
+      "name": "Main Webhook",
+      "id": "790a5021-b121-4fe2-8e99-8377f22bcba9",
+      "webhookId": "9315fb93-4a82-4367-b141-99e53dce653b",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "key-apify",
+              "name": "Apify API Key",
+              "value": "REMPLACE_PAR_TON_APIFY_TOKEN",
+              "type": "string"
+            },
+            {
+              "id": "key-unipile",
+              "name": "Unipile API Key",
+              "value": "REMPLACE_PAR_TA_CLE_UNIPILE",
+              "type": "string"
+            },
+            {
+              "id": "key-unipile-dsn",
+              "name": "Unipile DSN",
+              "value": "https://apiXXX.unipile.com:XXXXX",
+              "type": "string"
+            },
+            {
+              "id": "key-unipile-account",
+              "name": "Unipile Account ID",
+              "value": "REMPLACE_PAR_TON_UNIPILE_ACCOUNT_ID",
+              "type": "string"
+            },
+            {
+              "id": "key-my-provider-id",
+              "name": "My Provider ID",
+              "value": "REMPLACE_PAR_TON_PROVIDER_ID_LINKEDIN",
+              "type": "string"
+            },
+            {
+              "id": "f-railway-brain-url",
+              "name": "Railway Brain URL",
+              "value": "https://TON-SERVICE.up.railway.app",
+              "type": "string"
+            },
+            {
+              "id": "f-telegram-chat-id",
+              "name": "Telegram Chat ID",
+              "value": "REMPLACE_PAR_TON_TELEGRAM_CHAT_ID",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -2784,
+        128
+      ],
+      "name": "Set Keys",
+      "id": "7476531c-27df-4180-b30d-83d79f820791"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://api.apify.com/v2/acts/harvestapi~linkedin-profile-scraper/run-sync-get-dataset-items?token={{ $('Set Keys').item.json['Apify API Key'] }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ \"urls\": [$('Normalize Webhook').item.json.profileUrl] }) }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        32,
+        64
+      ],
+      "name": "Scrape LinkedIn Profile",
+      "retryOnFail": true,
+      "maxTries": 3,
+      "id": "83993cda-f869-44a4-a064-5f926cc22329"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4.1 Mini"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "You are a Lead Analysis Expert. Your task is to create an accurate user profile based on lead information provided to you, without adding any information not provided.\n\nOutput the following information:\n\nFirst Name: (if there is a first name present)\nOccupation: (the leads occupation, if mentioned)\nAge: (the leads age, if mentioned)\nGender: (the leads gender, if obvious)\nPersonalization: (specific details about the lead which can be used to personalize a message)\nTopics: (topics the lead talks about)",
+              "role": "system"
+            },
+            {
+              "content": "=Lead Name: {{ $json.firstName }} {{ $json.lastName }}\n\nLinkedIn Headline: {{ $json.headline }}\n\nLinkedIn Summary: {{ $json.about }}"
+            }
+          ]
+        },
+        "jsonOutput": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        192,
+        96
+      ],
+      "name": "Analyze Lead",
+      "id": "686857f5-94d4-4560-898d-51c2a029372d"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "lead-details",
+              "name": "LeadDetails",
+              "value": "=Name: {{ $('Analyze Lead').item.json.message.content['First Name'] }}\nPersonalization: {{ $('Analyze Lead').item.json.message.content.Personalization }}\nOccupation: {{ $('Analyze Lead').item.json.message.content.Occupation }}\nAge: {{ $('Analyze Lead').item.json.message.content.Age }}\nGender: {{ $('Analyze Lead').item.json.message.content.Gender }}\nTopics: {{ $('Analyze Lead').item.json.message.content.Topics }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        352,
+        400
+      ],
+      "name": "Set Details",
+      "id": "f0177c24-bbd7-4357-9d61-168e6bb95c3d"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "pause-check",
+              "leftValue": "={{ $json.output }}",
+              "rightValue": "PAUSE_CONVERSATION",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        2000,
+        -384
+      ],
+      "name": "If pause_conversation",
+      "id": "2900e8e8-d5c4-4e21-bd2b-24412ab7c4c0"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Set Keys').item.json['Telegram Chat ID'] }}",
+        "text": "=⚠️ Handover LinkedIn : {{ $('Normalize Webhook').item.json.prospect }}\n\nProfil : {{ $('Scrape LinkedIn Profile').item.json.profileUrl }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2144,
+        -144
+      ],
+      "name": "Human Handover",
+      "id": "539a8dd7-718e-45ae-8a03-c0c0e0b7f13f",
+      "webhookId": "623b3d92-2567-47b7-b81a-c6cb81b75f05"
+    },
+    {
+      "parameters": {
+        "jsCode": "var text = $input\n  .first()\n  .json.output\n  .replace(/\\s*&&\\s*/g, '\\n')\n  .replace(/—/g, ' ')\n  .replace(/’/g, \"'\")\n  .replace(/“/g, '')\n  .replace(/”/g, '')\n  .trim();\n\nreturn [{ json: { message: text } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2272,
+        -352
+      ],
+      "name": "Format, split & Send multiple messages",
+      "id": "a5ed6b07-36ae-43d9-8e9d-67a175e3bbdb"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Set Keys').item.json['Unipile DSN'] }}/api/v1/chats/{{ $('Normalize Webhook').item.json.chatId }}/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-API-KEY",
+              "value": "={{ $('Set Keys').item.json['Unipile API Key'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "text",
+              "value": "={{ $('Format, split & Send multiple messages').item.json.message }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2784,
+        -304
+      ],
+      "name": "Send message",
+      "id": "b1567177-ad93-4273-bcf1-983acfbb8d0d"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "not-my-msg",
+              "leftValue": "={{ (($('Main Webhook').item.json.body || {}).event === 'message_reaction') ? ((($('Main Webhook').item.json.body || {}).reaction_sender || {}).attendee_provider_id || '') : ((($('Main Webhook').item.json.body || {}).sender || {}).attendee_provider_id || '') }}",
+              "rightValue": "={{ $('Set Keys').item.json['My Provider ID'] }}",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              }
+            },
+            {
+              "id": "not-a-reaction",
+              "leftValue": "={{ ($('Main Webhook').item.json.body || {}).event }}",
+              "rightValue": "message_reaction",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -2624,
+        112
+      ],
+      "name": "Not My Message?",
+      "id": "c905d610-8560-42e5-be7f-f7f760091620"
+    },
+    {
+      "parameters": {
+        "url": "={{ $('Set Keys').item.json['Unipile DSN'] }}/api/v1/chats/{{ $('Main Webhook').item.json.body.chat_id }}/messages?limit=20",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-API-KEY",
+              "value": "={{ $('Set Keys').item.json['Unipile API Key'] }}"
+            },
+            {
+              "name": "accept",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -1792,
+        144
+      ],
+      "name": "Fetch History",
+      "retryOnFail": true,
+      "maxTries": 2,
+      "id": "3888f7b0-555a-47f7-b9ff-317cf1529917"
+    },
+    {
+      "parameters": {
+        "jsCode": "const webhook = $('Main Webhook').first().json.body;\nconst historyItems = $('Fetch History').first().json.items || [];\nconst myId = $('Set Keys').first().json['My Provider ID'];\nconst sender = webhook.sender || {};\nconst eventType = webhook.event || 'message_received';\n\n// Build chronological history with messageId + simple reaction array\n// For reactions, the actual prospect is in reaction_sender; for messages, it's in sender\nconst prospectInfoEarly = (eventType === 'message_reaction')\n  ? (webhook.reaction_sender || {})\n  : sender;\n\nconst history = historyItems.slice().reverse().map(m => ({\n  isMe: m.sender_id === myId || m.is_sender === 1,\n  from: (m.sender_id === myId || m.is_sender === 1) ? 'Me' : (prospectInfoEarly.attendee_name || 'Prospect'),\n  text: m.text || '',\n  messageId: m.id || ''\n}));\n\n// Conversation URN\nconst chatProviderId = historyItems.length > 0 ? historyItems[0].chat_provider_id : '';\nconst conversationUrn = 'urn:li:msg_conversation:(urn:li:fsd_profile:' + myId + ',' + chatProviderId + ')';\n\n// Profile URL — use prospectInfo so reactions fetch prospect's profile\nconst profileUrl = prospectInfoEarly.attendee_profile_url ||\n  ('https://www.linkedin.com/in/' + (prospectInfoEarly.attendee_provider_id || ''));\n\n// Branch on event type\nif (eventType === 'message_reaction') {\n  // The webhook for a reaction event has slightly different structure.\n  // Try multiple field names for compatibility.\n  const reactedMsgId = webhook.message_id || '';\n  const reactionEmoji = (typeof webhook.reaction === 'string' ? webhook.reaction : (webhook.reaction || {}).value) || '?';\n  const reactionSender = webhook.reaction_sender || {};\n  const reactionSenderId = reactionSender.attendee_provider_id || '';\n\n  // Filter 1 : reaction sender must NOT be Me\n  if (reactionSenderId === myId) {\n    return [];\n  }\n\n  // Filter 2 : reaction must be on my MOST RECENT message\n  // Find my most recent message in history\n  const maxMsgs = historyItems.filter(m => m.sender_id === myId || m.is_sender === 1);\n  const maxLatest = maxMsgs[0]; // historyItems is newest-first, so maxMsgs[0] is my most recent\n  if (!maxLatest || maxLatest.id !== reactedMsgId) {\n    return [];\n  }\n\n  // Filter 3 : there must be at least one prospect message in history (else it's just icebreaker)\n  const prospectMsgs = historyItems.filter(m => m.sender_id !== myId && m.is_sender !== 1);\n  if (prospectMsgs.length === 0) {\n    return [];\n  }\n\n  // OK, this is a valid reaction event we should respond to.\n  // Synthesize a virtual lastMessage for the agents.\n  const virtualMsg = '[Réaction du prospect : ' + reactionEmoji + ' (le prospect a réagi à ton dernier message avec cet emoji, sans répondre par texte)]';\n\n  return [{\n    json: {\n      conversationUrn,\n      chatId: webhook.chat_id || '',\n      lastMessage: virtualMsg,\n      prospect: prospectInfoEarly.attendee_name || '',\n      profileUrl,\n      senderProviderId: prospectInfoEarly.attendee_provider_id || '',\n      history,\n      details: null,\n      hasAudio: false,\n      audioItems: [],\n      audioMessageId: '',\n      audioAttachmentId: '',\n      audioMimetype: '',\n      originalText: virtualMsg,\n      isReaction: true,\n      reactionEmoji: reactionEmoji\n    }\n  }];\n}\n\n// Default branch : message_received (text or audio, current behavior)\nlet hasAudio = false;\nlet audioMessageId = '';\nlet audioAttachmentId = '';\nlet audioMimetype = '';\nlet originalText = webhook.message || '';\n\n// Detect ALL audio attachments since the last bot message\nconst audioItems = [];\nfor (let i = 0; i < historyItems.length; i++) {\n  const m = historyItems[i];\n  const fromMe = (m.sender_id === myId) || (m.is_sender === 1);\n  if (fromMe) break;\n  const attachments = m.attachments || [];\n  const audio = attachments.find(a =>\n    (a.mimetype && String(a.mimetype).toLowerCase().startsWith('audio')) ||\n    (a.type && String(a.type).toLowerCase().includes('audio'))\n  );\n  if (audio) {\n    audioItems.push({\n      messageId: m.id || m.message_id || '',\n      attachmentId: audio.id || '',\n      mimetype: audio.mimetype || 'audio/mp4'\n    });\n  }\n}\n\nif (audioItems.length > 0) {\n  hasAudio = true;\n  audioMessageId = audioItems[0].messageId;\n  audioAttachmentId = audioItems[0].attachmentId;\n  audioMimetype = audioItems[0].mimetype;\n}\n\nreturn [{\n  json: {\n    conversationUrn,\n    chatId: webhook.chat_id || '',\n    lastMessage: originalText,\n    prospect: sender.attendee_name || '',\n    profileUrl,\n    senderProviderId: sender.attendee_provider_id || '',\n    history,\n    details: null,\n    hasAudio,\n    audioItems,\n    audioMessageId,\n    audioAttachmentId,\n    audioMimetype,\n    originalText,\n    isReaction: false\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1408,
+        160
+      ],
+      "name": "Normalize Raw",
+      "id": "08a3ac0c-7df5-4bac-8846-d537682cca60"
+    },
+    {
+      "parameters": {
+        "amount": 1
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        2528,
+        -336
+      ],
+      "name": "Wait2",
+      "id": "1516153f-7e31-4cc0-a7ae-5154fe30e21d",
+      "webhookId": "22eb9af4-90d3-43ac-9908-79af2a319746"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "paused-list",
+              "name": "paused_profiles",
+              "value": "",
+              "type": "string"
+            },
+            {
+              "id": "test-allowlist",
+              "name": "test_allowlist",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -2464,
+        112
+      ],
+      "name": "Paused Profiles",
+      "id": "cc88e420-ba45-49cc-84ab-586b4723c346"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get sender info\nconst sender = $('Main Webhook').first().json.body.sender || {};\nconst profileUrl = (sender.attendee_profile_url || '').toLowerCase();\nconst providerId = (sender.attendee_provider_id || '').toLowerCase();\nconst name = (sender.attendee_name || '').toLowerCase();\n\n// Get public identifier from Resolve Profile node\nconst resolved = $('Resolve Profile').first().json;\nconst publicId = (resolved.public_identifier || '').toLowerCase();\n\n// 1) TEST ALLOWLIST (if non-empty, ONLY these profiles can talk to the bot)\nconst allowRaw = $('Paused Profiles').first().json.test_allowlist || '';\nconst allowList = allowRaw.split(',').map(s => s.trim().toLowerCase()).filter(s => s.length > 0);\n\nif (allowList.length > 0) {\n  const isAllowed = allowList.some(id => {\n    if (publicId && publicId === id) return true;\n    if (profileUrl.includes(id)) return true;\n    if (providerId === id) return true;\n    if (name === id) return true;\n    return false;\n  });\n  if (!isAllowed) {\n    return [];\n  }\n}\n\n// 2) Existing paused list (blacklist)\nconst pausedRaw = $('Paused Profiles').first().json.paused_profiles || '';\nconst pausedList = pausedRaw.split(',').map(s => s.trim().toLowerCase()).filter(s => s.length > 0);\n\nconst isPaused = pausedList.some(id => {\n  if (publicId && publicId === id) return true;\n  if (profileUrl.includes(id)) return true;\n  if (providerId === id) return true;\n  if (name === id) return true;\n  return false;\n});\n\nif (isPaused) {\n  return [];\n}\n\nreturn $input.all();\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -2208,
+        128
+      ],
+      "name": "Is Paused?",
+      "id": "2d4bdbd5-f8c6-4d6c-96ce-f143efccf0e9"
+    },
+    {
+      "parameters": {
+        "url": "={{ $('Set Keys').item.json['Unipile DSN'] }}/api/v1/users/{{ (($('Main Webhook').item.json.body || {}).event === 'message_reaction') ? ((($('Main Webhook').item.json.body || {}).reaction_sender || {}).attendee_provider_id || '') : ((($('Main Webhook').item.json.body || {}).sender || {}).attendee_provider_id || '') }}?account_id={{ $('Set Keys').item.json['Unipile Account ID'] }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-API-KEY",
+              "value": "={{ $('Set Keys').item.json['Unipile API Key'] }}"
+            },
+            {
+              "name": "accept",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -2320,
+        128
+      ],
+      "name": "Resolve Profile",
+      "id": "a7d3bfab-30f4-4da2-af4c-57c27dd6975c"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "audio-check",
+              "leftValue": "={{ $json.hasAudio }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -1248,
+        144
+      ],
+      "name": "Has Audio?",
+      "id": "062db21a-4fc8-4a2c-9b69-af5cdaf05f01"
+    },
+    {
+      "parameters": {
+        "url": "={{ $('Set Keys').item.json['Unipile DSN'] }}/api/v1/messages/{{ $json.messageId }}/attachments/{{ $json.attachmentId }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-API-KEY",
+              "value": "={{ $('Set Keys').item.json['Unipile API Key'] }}"
+            },
+            {
+              "name": "accept",
+              "value": "*/*"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -912,
+        -288
+      ],
+      "name": "Download Audio",
+      "id": "1122bc64-74c2-45c0-a1d5-ea8c6c9e65c2"
+    },
+    {
+      "parameters": {
+        "resource": "audio",
+        "operation": "transcribe",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        -720,
+        -288
+      ],
+      "name": "Transcribe Audio",
+      "id": "c22d6f32-8060-4fa6-8aec-4dd4191106d0"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f-conversationUrn",
+              "name": "conversationUrn",
+              "value": "={{ $json.conversationUrn }}",
+              "type": "string"
+            },
+            {
+              "id": "f-chatId",
+              "name": "chatId",
+              "value": "={{ $json.chatId }}",
+              "type": "string"
+            },
+            {
+              "id": "f-lastMessage",
+              "name": "lastMessage",
+              "value": "={{ $json.lastMessage }}",
+              "type": "string"
+            },
+            {
+              "id": "f-prospect",
+              "name": "prospect",
+              "value": "={{ $json.prospect }}",
+              "type": "string"
+            },
+            {
+              "id": "f-profileUrl",
+              "name": "profileUrl",
+              "value": "={{ $json.profileUrl }}",
+              "type": "string"
+            },
+            {
+              "id": "f-senderProviderId",
+              "name": "senderProviderId",
+              "value": "={{ $json.senderProviderId }}",
+              "type": "string"
+            },
+            {
+              "id": "f-history",
+              "name": "history",
+              "value": "={{ $json.history }}",
+              "type": "array"
+            },
+            {
+              "id": "f-details",
+              "name": "details",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -160,
+        0
+      ],
+      "name": "Normalize Webhook",
+      "id": "85ec371e-af2a-42f2-a0bc-9cacd907cc56"
+    },
+    {
+      "parameters": {
+        "amount": 60
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        -2016,
+        144
+      ],
+      "name": "Wait Debounce",
+      "id": "2d64cbeb-74f4-4eba-b821-cd4896d95ce3",
+      "webhookId": "d8c950c4-9293-46b9-97aa-fc158b4827f8"
+    },
+    {
+      "parameters": {
+        "jsCode": "// After the 40s wait, re-check the chat: if a newer message has arrived,\n// abandon this run silently — the newer message's own webhook will produce\n// the reply (with both messages now in its history context).\n//\n// For reaction events, this debounce is not needed (a reaction always points\n// to a specific message_id in the past). We let it through and Normalize Raw\n// handles the filtering (must be on my latest message, etc.).\n\nconst items = $('Fetch History').first().json.items || [];\nconst webhook = $('Main Webhook').first().json.body || {};\nconst myId = $('Set Keys').first().json['My Provider ID'];\n\n// Bypass for reaction events — Normalize Raw does its own filtering\nif (webhook.event === 'message_reaction') {\n  return $input.all();\n}\n\nif (items.length === 0) return $input.all();\n\nconst latest = items[0];\n\n// Defensive: if the latest message is somehow already from us\n// (a parallel run already replied), bail.\nif (latest.sender_id === myId || latest.is_sender === 1) {\n  return [];\n}\n\n// Compare the message_id of the message that triggered THIS webhook\n// against the id of the latest message in the chat. If they differ,\n// a newer message has arrived during the 40s wait — exit silently.\nconst webhookMsgId = webhook.message_id || '';\nconst latestId = latest.id || '';\n\nif (webhookMsgId && latestId && webhookMsgId !== latestId) {\n  return [];\n}\n\n// Still the latest message — proceed with the reply pipeline.\nreturn $input.all();\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1600,
+        160
+      ],
+      "name": "Is Still Latest?",
+      "id": "0ec2f85a-1ba9-4b6a-8efe-0742ebd93abb"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "audioItems",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        -1088,
+        -48
+      ],
+      "name": "Split Audio Items",
+      "id": "98afbb53-3b8b-45fb-ab9f-7f9a5dd41270"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f-msg-id",
+              "name": "messageId",
+              "value": "={{ $('Split Audio Items').item.json.messageId }}",
+              "type": "string"
+            },
+            {
+              "id": "f-text",
+              "name": "text",
+              "value": "={{ $json.text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -560,
+        -256
+      ],
+      "name": "Pair Transcription",
+      "id": "4ac83379-1483-42d9-ad8b-d037ec5cf718"
+    },
+    {
+      "parameters": {
+        "jsCode": "const raw = $('Normalize Raw').first().json;\nconst transcriptions = $input.all().map(i => i.json);\n\n// Build messageId -> transcription map\nconst transcMap = {};\nfor (const t of transcriptions) {\n  if (t.messageId && t.text) transcMap[t.messageId] = t.text;\n}\n\n// Patch history: replace empty text with '[Vocal] <transcription>'\nconst patchedHistory = raw.history.map(m => {\n  if (m.messageId && transcMap[m.messageId]) {\n    return { ...m, text: '[Vocal] ' + transcMap[m.messageId] };\n  }\n  return m;\n});\n\n// Compute lastMessage from the very latest history entry (chronologically last)\nlet lastMessage = raw.originalText || '';\nconst latest = patchedHistory[patchedHistory.length - 1];\nif (latest && latest.messageId && transcMap[latest.messageId]) {\n  const t = transcMap[latest.messageId];\n  lastMessage = lastMessage\n    ? (raw.originalText + '\\n[Vocal transcrit] ' + t)\n    : ('[Vocal transcrit] ' + t);\n}\n\nreturn [{\n  json: {\n    conversationUrn: raw.conversationUrn,\n    chatId: raw.chatId,\n    lastMessage,\n    prospect: raw.prospect,\n    profileUrl: raw.profileUrl,\n    senderProviderId: raw.senderProviderId,\n    history: patchedHistory,\n    details: null\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -336,
+        -192
+      ],
+      "name": "Inject Transcriptions",
+      "id": "7befd89b-7196-45e0-a8e2-e495dd672474"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Set Keys').item.json['Railway Brain URL'] }}/chat",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ history: (($('Normalize Webhook').item.json.history || []).map(m => ({ role: m.isMe ? 'me' : 'prospect', text: m.text || '' }))), last_message: ($('Normalize Webhook').item.json.lastMessage || ''), lead_profile: ($('Set Details').item.json.LeadDetails || ''), agent_persona: 'me', chat_id: ($('Normalize Webhook').item.json.chatId || ''), sender_account_id: ($('Set Keys').item.json['Unipile Account ID'] || '') }) }}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "json"
+            }
+          },
+          "timeout": 120000
+        }
+      },
+      "name": "Call Railway Brain",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1760,
+        320
+      ],
+      "id": "b3c3f85d-15bc-46fe-b033-9d22382c1c83",
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000
+    },
+    {
+      "parameters": {
+        "jsCode": "const r = $input.first().json;\nif (r.handover === true) {\n  return [{ json: { output: 'PAUSE_CONVERSATION', tools_called: r.tools_called || [], handover_reason: r.handover_reason || '' } }];\n}\nconst messages = (r.messages || []).map(m => String(m).trim()).filter(Boolean);\nconst combined = messages.join(' && ');\nreturn [{ json: { output: combined, tools_called: r.tools_called || [], cost_usd: r.cost_usd, duration_ms: r.duration_ms, num_turns: r.num_turns } }];\n"
+      },
+      "name": "Format Railway Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1984,
+        320
+      ],
+      "id": "7d89d729-ccb9-4839-980d-c10d97180cb3"
+    }
+  ],
+  "connections": {
+    "Main Webhook": {
+      "main": [
+        [
+          {
+            "node": "Set Keys",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Keys": {
+      "main": [
+        [
+          {
+            "node": "Not My Message?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Scrape LinkedIn Profile": {
+      "main": [
+        [
+          {
+            "node": "Analyze Lead",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze Lead": {
+      "main": [
+        [
+          {
+            "node": "Set Details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Details": {
+      "main": [
+        [
+          {
+            "node": "Call Railway Brain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If pause_conversation": {
+      "main": [
+        [
+          {
+            "node": "Human Handover",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Format, split & Send multiple messages",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format, split & Send multiple messages": {
+      "main": [
+        [
+          {
+            "node": "Wait2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Not My Message?": {
+      "main": [
+        [
+          {
+            "node": "Paused Profiles",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "Fetch History": {
+      "main": [
+        [
+          {
+            "node": "Is Still Latest?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send message": {
+      "main": [
+        []
+      ]
+    },
+    "Wait2": {
+      "main": [
+        [
+          {
+            "node": "Send message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Paused Profiles": {
+      "main": [
+        [
+          {
+            "node": "Resolve Profile",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Paused?": {
+      "main": [
+        [
+          {
+            "node": "Wait Debounce",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Resolve Profile": {
+      "main": [
+        [
+          {
+            "node": "Is Paused?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize Raw": {
+      "main": [
+        [
+          {
+            "node": "Has Audio?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Has Audio?": {
+      "main": [
+        [
+          {
+            "node": "Split Audio Items",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Normalize Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download Audio": {
+      "main": [
+        [
+          {
+            "node": "Transcribe Audio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transcribe Audio": {
+      "main": [
+        [
+          {
+            "node": "Pair Transcription",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize Webhook": {
+      "main": [
+        [
+          {
+            "node": "Scrape LinkedIn Profile",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait Debounce": {
+      "main": [
+        [
+          {
+            "node": "Fetch History",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Still Latest?": {
+      "main": [
+        [
+          {
+            "node": "Normalize Raw",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Audio Items": {
+      "main": [
+        [
+          {
+            "node": "Download Audio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pair Transcription": {
+      "main": [
+        [
+          {
+            "node": "Inject Transcriptions",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Inject Transcriptions": {
+      "main": [
+        [
+          {
+            "node": "Normalize Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call Railway Brain": {
+      "main": [
+        [
+          {
+            "node": "Format Railway Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Railway Response": {
+      "main": [
+        [
+          {
+            "node": "If pause_conversation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  }
+}
