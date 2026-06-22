@@ -35,25 +35,27 @@ Ouvre un bloc-notes, et pour chaque site : crée un compte, puis copie la clé d
 
 ---
 
-## ✅ ÉTAPE 2 — Crée TON dépôt et installe-le sur ton ordi (10 min)
+## ✅ ÉTAPE 2 — Crée TON dépôt et ouvre-le dans VS Code (10 min)
 
-⚠️ **Important** : ton dossier doit rester **connecté à GitHub** (sinon la mise en ligne échouera plus tard). On utilise donc **GitHub Desktop**, une appli gratuite avec des boutons (pas de code). **Ne télécharge PAS le ZIP** : ça déconnecte le dossier de GitHub et le bot ne marchera pas.
+⚠️ **Ne télécharge PAS le ZIP** : un dossier issu d'un ZIP n'est **pas relié à GitHub**, et la mise en ligne du bot échouera. À la place, on **clone** — VS Code le fait tout seul.
 
-1. Va sur **https://github.com/louvideosia-png/linkedin-setter-template** → bouton vert **« Use this template »** → **Create a new repository** → nom (ex `mon-setter`) → **Private** → **Create repository**. *(Ça crée TA copie du template sur TON GitHub.)*
-2. Installe **GitHub Desktop** : va sur **desktop.github.com** → **Download** → installe → **connecte-toi avec ton compte GitHub**.
-3. Dans GitHub Desktop : menu **File → Clone repository** → onglet **GitHub.com** → choisis ton dépôt `mon-setter` → **Clone**. *(Note le "Local Path" affiché, souvent `Documents/GitHub/mon-setter`.)*
+1. Va sur **https://github.com/louvideosia-png/linkedin-setter-template** → bouton vert **« Use this template »** → **Create a new repository** → nom (ex `mon-setter`) → **Private** → **Create repository**. *(Ça crée TA copie sur TON GitHub.)*
+2. Sur TON nouveau dépôt, clique le bouton vert **Code** → onglet **HTTPS** → **copie l'adresse** (`https://github.com/TON-COMPTE/mon-setter.git`).
+3. Ouvre **VS Code** → appuie sur **`Cmd + Shift + P`** → tape **`Git: Clone`** → **Entrée** → **colle l'adresse** copiée → choisis un dossier où le ranger.
+   - Si VS Code te demande de **te connecter à GitHub**, accepte (ça l'autorise à envoyer tes fichiers plus tard).
+   - Si VS Code dit que **git n'est pas installé**, clique le lien qu'il propose pour l'installer, puis recommence.
+4. Quand VS Code propose **« Ouvrir »** le dépôt cloné → clique **Ouvrir**.
 
-✅ Tu as maintenant un dossier `mon-setter` sur ton ordi, **connecté à ton GitHub**.
+✅ Ton projet est ouvert dans VS Code, **connecté à ton GitHub**.
 
 ---
 
-## ✅ ÉTAPE 3 — Ouvre Claude Code dans ce dossier
+## ✅ ÉTAPE 3 — Lance Claude Code
 
-*(Pas encore Claude Code ? Installe-le d'abord : cherche "Claude Code download" sur Google et suis l'installation officielle d'Anthropic.)*
+*(Pas encore Claude Code ? Installe l'extension Claude Code dans VS Code, ou l'app officielle d'Anthropic.)*
 
-1. Dans **GitHub Desktop**, ton dépôt étant ouvert : menu **Repository → Open in Terminal**.
-   → une fenêtre noire s'ouvre, **déjà placée dans le bon dossier**.
-2. Dans cette fenêtre, tape **`claude`** puis **Entrée**. ✅ Claude Code démarre dans ton dossier.
+- Dans VS Code, ouvre **Claude Code** (l'extension) : il travaille déjà dans ton dossier. C'est tout.
+- *(Si tu utilises Claude Code en ligne de commande : dans VS Code, menu **Terminal → New Terminal**, puis tape **`claude`**.)*
 
 ---
 
