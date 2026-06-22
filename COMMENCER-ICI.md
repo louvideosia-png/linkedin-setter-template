@@ -11,7 +11,7 @@
 Ouvre l'app **Notes**. Pour chaque service : crée un compte, et copie la clé dans tes notes.
 
 ### Les clés du bot
-1. **Anthropic** (le cerveau) — `console.anthropic.com` → **Billing** : mets 20-50 € de crédits → **API Keys** → **Create Key** → copie `sk-ant-...`
+1. **Anthropic** (le cerveau) — `https://platform.claude.com/settings/billing` → mets 20-50 € de crédits → **API Keys** → **Create Key** → copie `sk-ant-...`
 2. **OpenAI** — `platform.openai.com` → **Billing** (carte + crédits) → **API keys** → **Create new secret key** → copie `sk-...`
 3. **Unipile** — `unipile.com` → **Dashboard** → **connecte ton compte LinkedIn** (suis leur assistant) → copie ta **API Key** + ton **DSN**
 4. **Apify** — `apify.com` → **Settings → Integrations → API tokens** → copie le **token**
