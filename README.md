@@ -2,7 +2,7 @@
 
 Un chatbot d'**appointment setting** sur LinkedIn : il répond à tes DM, qualifie tes prospects et **booke des appels** à ta place, dans ta voix, adapté à ton business. Tu n'as pas besoin d'être développeur — ton **Claude Code** fait l'installation, tu remplis juste tes infos et tes clés.
 
-> Ce dépôt est un **template**. Tu le dupliques sur TON compte, tu le remplis avec TON business, et tu le déploies. Aucune info du créateur n'y figure : tout est à toi.
+> Ce dépôt est un **template**. Tu le dupliques sur TON compte, tu le remplis avec TON business, et tu le déploies.
 
 ---
 
@@ -20,7 +20,7 @@ Un chatbot d'**appointment setting** sur LinkedIn : il répond à tes DM, qualif
 └──────────────────────────────────────────────────────────────────────┘
 ```
 
-- **Le brain (ce dépôt)** = l'intelligence du bot. C'est ici que tu mets ton offre, tes objections, ton ton.
+- **Le brain (ce dépôt)** = l'intelligence du bot. C'est ici que tu mets ton offre, tes objections, etc.
 - **n8n** = la plomberie qui relie LinkedIn au brain (fourni séparément, à importer).
 
 ---
