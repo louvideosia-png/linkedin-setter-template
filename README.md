@@ -25,32 +25,11 @@ Un chatbot d'**appointment setting** sur LinkedIn : il répond à tes DM, qualif
 
 ---
 
-## ✅ Ce que TU dois faire toi-même (Claude Code ne peut pas)
+## 🚀 Pour l'installer
 
-1. **Créer tes comptes / clés API** (voir [INSTALL.md](INSTALL.md) pour le détail clic-par-clic) :
-   - **Anthropic** (le cœur — fait tourner le bot) → console.anthropic.com + crédits
-   - **OpenAI** (analyse + transcription des vocaux, côté n8n)
-   - **Unipile** (accès LinkedIn)
-   - **Apify** (scraping de profil)
-   - **Telegram** (notifications)
-   - Comptes : **GitHub**, **Railway**, **n8n Cloud**
-2. **Remplir les fichiers marqués `🟨 À REMPLIR`** avec ton business (ton offre, tes objections, ta bio…).
+👉 **Suis le guide unique : [COMMENCER-ICI.md](COMMENCER-ICI.md)** — tout est expliqué pas à pas (créer tes clés, récupérer le template, lancer Claude Code, tester).
 
-## 🤖 Ce que ton Claude Code fait pour toi
-
-- Dupliquer ce template dans ton projet et t'aider à remplir les fichiers (il t'interviewe, rédige, tu valides)
-- Créer ton `.env`
-- Déployer le brain sur Railway
-- Importer et câbler le workflow n8n
-- Vérifier que tout tourne
-
----
-
-## 🚀 Démarrage : le prompt à donner à ton Claude Code
-
-Ouvre Claude Code dans un dossier vide, et colle le contenu de **[claude-code/1-install.md](claude-code/1-install.md)**. Il te guide pour tout le reste.
-
-Avant ça, lis **[INSTALL.md](INSTALL.md)** pour créer tes clés API (tu en auras besoin pendant l'install).
+En résumé : tu crées tes clés API + tu remplis tes infos business, et ton **Claude Code** fait tout le reste (remplissage, déploiement Railway, câblage n8n).
 
 ---
 
