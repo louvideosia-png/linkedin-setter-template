@@ -49,8 +49,21 @@ Certains nœuds ont besoin d'une "credential" n8n (différent des clés du Set K
 
 ## Étape E — Brancher le webhook LinkedIn (Unipile → n8n)
 1. Ouvre le nœud **Main Webhook** → copie son **Production URL** (se termine par `/linkedin-dm-webhook`).
-2. Dans mon dashboard **Unipile**, configure un **webhook** sur les nouveaux messages LinkedIn
-   (et réactions) pointant vers cette URL n8n. Guide-moi sur l'écran Unipile exact.
+2. Crée le webhook Unipile **avec le script autonome fourni** (il embarque déjà le bon schéma de
+   payload, donc pas besoin d'avoir un webhook préexistant à copier) :
+   ```
+   export UNIPILE_DSN="https://apiXXX.unipile.com:XXXXX"
+   export UNIPILE_API_KEY="MA_CLE_UNIPILE"
+   export UNIPILE_ACCOUNT_ID="MON_ACCOUNT_ID"   # cf. Étape B, /api/v1/accounts
+   export N8N_WEBHOOK_URL="https://MON-N8N/webhook/linkedin-dm-webhook"
+   python3 n8n/create_unipile_webhook.py
+   ```
+   Il crée un webhook `messaging` (`message_received` + `message_reaction`) scopé sur mon compte
+   LinkedIn et pointant vers l'URL n8n.
+   - ⚠️ Ne te contente PAS de copier un webhook déjà présent dans Unipile : un nouvel utilisateur
+     n'en a aucun. Le script est la source de vérité reproductible.
+   - Si l'API Unipile bloque, guide-moi pour le créer à la main dans le dashboard Unipile (source
+     "messaging", events message_received + message_reaction, URL = celle du nœud Main Webhook).
 
 ## Étape F — Activer & tester
 1. **Active** le workflow (toggle en haut à droite).

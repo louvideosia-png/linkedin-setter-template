@@ -65,9 +65,17 @@ Suis `claude-code/3-import-n8n.md` mais en AUTOMATISANT :
 
 ## PHASE 6 — Relier LinkedIn → n8n (webhook Unipile)
 1. Récupère l'URL de production du webhook n8n (le nœud `Main Webhook`, finit par `/linkedin-dm-webhook`).
-2. Crée le webhook côté Unipile via leur API (avec ma clé) pour qu'il pointe vers cette URL n8n
-   sur les nouveaux messages LinkedIn. Si l'API Unipile ne le permet pas, donne-moi les clics exacts
-   à faire dans le dashboard Unipile.
+2. Crée le webhook côté Unipile **avec le script fourni** `n8n/create_unipile_webhook.py` (il contient
+   déjà le bon schéma de payload — NE copie PAS un webhook existant, ça ne serait pas reproductible) :
+   ```
+   export UNIPILE_DSN="https://apiXXX.unipile.com:XXXXX"
+   export UNIPILE_API_KEY="MA_CLE_UNIPILE"
+   export UNIPILE_ACCOUNT_ID="MON_ACCOUNT_ID"   # l'id du compte LinkedIn (cf. Phase 5, /api/v1/accounts)
+   export N8N_WEBHOOK_URL="https://MON-N8N/webhook/linkedin-dm-webhook"
+   python3 n8n/create_unipile_webhook.py
+   ```
+   Le webhook créé écoute `message_received` + `message_reaction` sur MON compte LinkedIn et pointe vers n8n.
+   Si l'API Unipile bloque, donne-moi les clics exacts à faire dans le dashboard Unipile.
 
 ## PHASE 7 — Mode test, activation, vérification
 1. Mets MON compte de test dans le champ `test_allowlist` du nœud `Paused Profiles` (le bot ne
