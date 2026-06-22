@@ -14,10 +14,16 @@ Ouvre le nœud **Set Keys** et remplace les placeholders par mes valeurs (rappel
 - `Apify API Key` → mon token Apify
 - `Unipile API Key` → ma clé Unipile
 - `Unipile DSN` → mon DSN Unipile (ex `https://apiXXX.unipile.com:XXXXX`)
-- `Unipile Account ID` → l'id de mon compte LinkedIn connecté à Unipile
-- `My Provider ID` → mon "provider id" LinkedIn (l'id interne de mon profil côté Unipile)
 - `Railway Brain URL` → l'URL publique de mon brain Railway (du PROMPT 2, SANS `/chat` à la fin)
-- `Telegram Chat ID` → l'id du chat/groupe où je veux recevoir les notifs (voir Étape D)
+- `Telegram Chat ID` → l'id du chat de notif (voir Étape D)
+
+👉 **`Unipile Account ID` et `My Provider ID` : ne me demande PAS de les chercher, récupère-les toi-même.**
+Lance (avec ma clé + mon DSN) :
+`curl -H "X-API-KEY: MA_CLE_UNIPILE" "https://MON_DSN/api/v1/accounts"`
+Dans la réponse, repère mon compte **LinkedIn** :
+- son champ `id` → c'est `Unipile Account ID`,
+- son identifiant de profil LinkedIn (souvent un champ type `provider_id` / commence par `ACoAA`) → c'est `My Provider ID`.
+Montre-moi les 2 valeurs trouvées, puis remplis-les dans Set Keys.
 
 ## Étape B-bis — Mode test vs production (nœud "Paused Profiles")
 Le nœud **Paused Profiles** contrôle qui le bot traite :

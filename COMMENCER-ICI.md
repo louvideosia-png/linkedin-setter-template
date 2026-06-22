@@ -21,7 +21,8 @@ Ouvre un bloc-notes, et pour chaque site : crée un compte, puis copie la clé d
 **3. Unipile** (connecte ton LinkedIn)
 - Va sur **unipile.com** → crée ton compte → ouvre le **Dashboard**.
 - Suis leur assistant pour **connecter ton compte LinkedIn**.
-- Dans les réglages, copie ces 4 infos : **API Key**, **DSN**, **Account ID**, **Provider ID**.
+- Copie ta **API Key** et ton **DSN** (l'adresse de ton instance, ex `apiXXX.unipile.com:XXXXX`).
+- *(Ton **Account ID** et ton **Provider ID** : pas besoin de les chercher à la main — ton Claude Code les récupérera pour toi plus tard.)*
 
 **4. Apify**
 - Va sur **apify.com** → crée ton compte.
@@ -34,29 +35,25 @@ Ouvre un bloc-notes, et pour chaque site : crée un compte, puis copie la clé d
 
 ---
 
-## ✅ ÉTAPE 2 — Récupère le template (5 min)
+## ✅ ÉTAPE 2 — Crée TON dépôt et installe-le sur ton ordi (10 min)
 
-1. Va sur **https://github.com/louvideosia-png/linkedin-setter-template**.
-2. Clique le bouton vert **« Use this template »** → **Create a new repository**.
-3. Donne un nom (ex : `mon-setter`), choisis **Private**, clique **Create repository**.
-4. Sur ton nouveau dépôt, clique **Code** (bouton vert) → **Download ZIP**.
-5. Le fichier `.zip` arrive dans ton dossier **Téléchargements** (Downloads).
-6. **Double-clique** dessus : ça crée un **dossier** (ex `mon-setter-main`) au même endroit. Retiens où il est.
+⚠️ **Important** : ton dossier doit rester **connecté à GitHub** (sinon la mise en ligne échouera plus tard). On utilise donc **GitHub Desktop**, une appli gratuite avec des boutons (pas de code). **Ne télécharge PAS le ZIP** : ça déconnecte le dossier de GitHub et le bot ne marchera pas.
+
+1. Va sur **https://github.com/louvideosia-png/linkedin-setter-template** → bouton vert **« Use this template »** → **Create a new repository** → nom (ex `mon-setter`) → **Private** → **Create repository**. *(Ça crée TA copie du template sur TON GitHub.)*
+2. Installe **GitHub Desktop** : va sur **desktop.github.com** → **Download** → installe → **connecte-toi avec ton compte GitHub**.
+3. Dans GitHub Desktop : menu **File → Clone repository** → onglet **GitHub.com** → choisis ton dépôt `mon-setter` → **Clone**. *(Note le "Local Path" affiché, souvent `Documents/GitHub/mon-setter`.)*
+
+✅ Tu as maintenant un dossier `mon-setter` sur ton ordi, **connecté à ton GitHub**.
 
 ---
 
-## ✅ ÉTAPE 3 — Ouvre Claude Code DANS ce dossier (sur Mac)
+## ✅ ÉTAPE 3 — Ouvre Claude Code dans ce dossier
 
-> "Ouvrir Claude Code dans le dossier" = lui dire de travailler dans le dossier que tu viens de créer.
+*(Pas encore Claude Code ? Installe-le d'abord : cherche "Claude Code download" sur Google et suis l'installation officielle d'Anthropic.)*
 
-**Si tu n'as pas encore Claude Code :** installe-le d'abord (cherche "Claude Code download" sur Google, suis l'installation officielle d'Anthropic).
-
-**Méthode infaillible (copie-drag) :**
-1. Ouvre l'app **Terminal** : appuie sur `Cmd + Espace`, tape `Terminal`, puis `Entrée`.
-2. Dans la fenêtre noire, tape `cd ` (les 3 lettres c-d puis **un espace**). N'appuie PAS sur Entrée.
-3. Ouvre le **Finder**, va dans **Téléchargements**, et **glisse le dossier** `mon-setter-main`
-   directement sur la fenêtre Terminal → son chemin s'écrit tout seul. Appuie sur **Entrée**.
-4. Tape `claude` puis **Entrée**. ✅ Claude Code démarre, et il travaille maintenant dans ton dossier.
+1. Dans **GitHub Desktop**, ton dépôt étant ouvert : menu **Repository → Open in Terminal**.
+   → une fenêtre noire s'ouvre, **déjà placée dans le bon dossier**.
+2. Dans cette fenêtre, tape **`claude`** puis **Entrée**. ✅ Claude Code démarre dans ton dossier.
 
 ---
 

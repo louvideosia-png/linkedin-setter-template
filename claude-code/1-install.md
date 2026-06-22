@@ -6,10 +6,14 @@ Le code (moteur) est déjà là et ne doit PAS être modifié. Ton job : m'aider
 pour mon business, puis préparer le déploiement. Procède dans cet ordre, en attendant ma validation
 à chaque étape.
 
-## Étape A — Vérifier l'environnement
+## Étape A — Vérifier l'environnement (IMPORTANT)
 1. Confirme que tu vois bien `main.py`, `config.py`, `.env.example` et le dossier `prompts/`.
-2. Liste-moi tous les fichiers qui contiennent le marqueur `🟨` (ce sont ceux que je dois remplir).
-3. Vérifie que Python 3.12+ est disponible (`python3 --version`).
+2. **Vérifie que ce dossier est bien un clone git connecté à mon GitHub** : lance `git remote -v`.
+   - Si ça affiche une URL `github.com/.../mon-setter` → parfait, continue.
+   - Si ça n'affiche RIEN (ou erreur "not a git repository") → **STOP**. Ça veut dire que le dossier
+     vient d'un ZIP, pas d'un clone. Dans ce cas, dis-moi clairement de refaire l'ÉTAPE 2 du guide
+     avec **GitHub Desktop (Clone repository)**, sinon la mise en ligne (PROMPT 2) déploiera un bot vide.
+3. Liste-moi tous les fichiers qui contiennent le marqueur `🟨` (ce sont ceux que je dois remplir).
 
 ## Étape B — Remplir les fichiers de mon business (le cœur)
 Pour CHAQUE fichier 🟨 ci-dessous, dans cet ordre, tu m'INTERVIEWES en français avec des questions
@@ -37,14 +41,19 @@ l'info, mets une formulation prudente ("on en parle en call") plutôt qu'une inv
    - `CALENDLY_URL`, et si j'en ai `YOUTUBE_URL` / `WEBSITE_URL`.
 3. Rappelle-moi que `.env` ne doit jamais être commité (vérifie qu'il est bien dans `.gitignore`).
 
-## Étape D — Test local du brain
-1. Crée un venv, installe `requirements.txt`.
-2. Lance `uvicorn main:app --port 8000` et fais un appel test :
-   `curl localhost:8000/` (doit répondre status "alive" + lister ma persona).
-3. Fais un appel de test sur `/chat` avec un faux message de prospect et montre-moi la réponse du bot.
-   Si la réponse ne ressemble pas à ma voix, on retourne ajuster les fichiers 🟨.
+## Étape D — Test local du brain (OPTIONNEL)
+Ce test est facultatif. **Si l'installation Python pose le moindre souci, SAUTE cette étape** : on
+testera le bot directement en ligne au PROMPT 2 (c'est aussi fiable).
+1. Si on tente : crée un venv, installe `requirements.txt`, lance `uvicorn main:app --port 8000`.
+2. `curl localhost:8000/` doit répondre status "alive" + lister ma persona.
+3. Un appel test sur `/chat` doit renvoyer une réponse dans ma voix. Sinon, on ajuste les fichiers 🟨.
+Si quoi que ce soit bloque ici → on passe directement à l'étape E, ce n'est pas grave.
 
-## Étape E — Commit & push
-Quand je valide, commit les fichiers remplis (PAS le `.env`) et pousse sur mon dépôt GitHub.
+## Étape E — Commit & push (OBLIGATOIRE pour la suite)
+1. Commit TOUS les fichiers remplis — mais **JAMAIS le `.env`** (vérifie qu'il est dans `.gitignore`).
+2. Pousse sur mon dépôt GitHub : `git push`.
+3. **Si le push échoue** (souci d'authentification) : dis-moi d'ouvrir **GitHub Desktop** et de cliquer
+   **« Push origin »** en haut à droite — ça enverra les fichiers. Le push DOIT réussir avant le PROMPT 2,
+   sinon Railway déploiera la version vide.
 
-Quand tout est vert, dis-moi : "Brain prêt — passe au PROMPT 2 (déploiement Railway)."
+Quand le push est confirmé sur GitHub, dis-moi : "Brain prêt — passe au PROMPT 2 (déploiement Railway)."
