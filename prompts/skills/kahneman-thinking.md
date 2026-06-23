@@ -23,7 +23,7 @@ description: Système 1 vs Système 2 (intuition rapide vs réflexion lente) + b
 **3. Effet de cadrage** : la même info présentée différemment change la décision.
 - *"Quelques jours pour mettre en place"* sonne court.
 - *"168 heures de setup"* sonne long.
-- *"Une semaine de prep et tu passes 0 minute sur LinkedIn ensuite"* sonne irrésistible.
+- *"Une semaine de prep et tu as un système de lead automatisés ensuite"* sonne irrésistible.
 
 **4. Statu-quo / endowment** : on préfère ne rien changer même si le changement serait positif. Force du frein invisible.
 - C'est CE biais qui fait dire *"je gère, j'ai pas besoin"* à un prospect qui galère pourtant.
