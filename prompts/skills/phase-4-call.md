@@ -48,9 +48,6 @@ Format type :
 
 Parfois le prospect saute directement à *"on peut s'appeler ?"* avant même Phase 3. Dans ce cas : je passe direct à 4b et j'envoie le Calendly. Pas besoin d'aller chercher l'asset pour la forme — il est déjà chaud.
 
-## Cas particulier — Prospect SaaS sans call
-
-Pour un prospect avec un produit self-serve (SaaS, formation auto, plateforme), le call peut ne pas être l'étape suivante. Le bot devient SON propre asset live de démo : *"tu te rends compte que c'est mon chatbot qui te parle là ? Si tu veux qu'on regarde ce que ça donnerait pour TON product, on peut juste s'en discuter rapidement en call de 30 min."*
 
 ## Si refus persistant
 
