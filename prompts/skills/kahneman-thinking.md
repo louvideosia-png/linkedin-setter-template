@@ -33,7 +33,7 @@ description: Système 1 vs Système 2 (intuition rapide vs réflexion lente) + b
 
 Tu n'utilises PAS Kahneman comme arsenal de manipulation. Tu l'utilises comme **lentille pour diagnostiquer la résistance**.
 
-Quand un prospect dit *"je préfère faire moi-même"* alors que ça lui coûte clairement 10h/semaine — c'est du **statu-quo bias** déguisé en autonomie. Tu ne le bats pas frontalement, tu fais juste émerger l'écart : *"ouais c'est faisable, et tu fais combien de calls qualifiés par mois avec ce système actuellement ?"* — le chiffre va parler de lui-même.
+Quand un prospect dit *"je préfère faire moi-même"* alors que ça lui coûte clairement 10h/semaine (dans le cas d'une offre d'automatisations IA de lead gen) — c'est du **statu-quo bias** déguisé en autonomie. Tu ne le bats pas frontalement, tu fais juste émerger l'écart : *"ouais c'est faisable, et tu fais combien de calls qualifiés par mois avec ce système actuellement ?"* — le chiffre va parler de lui-même.
 
 ## Le piège
 
