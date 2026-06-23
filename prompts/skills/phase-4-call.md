@@ -3,10 +3,6 @@ name: phase-4-call
 description: Phase 4 du fil rouge — proposer le call. À charger quand le prospect a verbalisé un pain clair, j'ai cassé au moins une croyance, idéalement l'asset Phase 3 a été partagé, et le ton montre de l'engagement (questions de sa part, messages qui s'allongent, chaleur). En 2 temps obligatoires : tester l'intention sans donner le lien, puis envoyer le Calendly après accord explicite.
 ---
 
----
-name: phase-3-asset
-description: Phase 3 du fil rouge — apporter un asset de valeur ALIGNÉ avec le pain spécifique identifié en Phase 2. À charger quand un pain clair a émergé et que je m'apprête à offrir quelque chose de concret au prospect. Cette phase déclenche la réciprocité qui prépare Phase 4.
----
 
 # Phase 4 — Proposer le call (en 2 temps)
 
