@@ -15,7 +15,7 @@ description: Système 1 vs Système 2 (intuition rapide vs réflexion lente) + b
 ## Les 4 biais les plus utiles à reconnaître
 
 **1. Ancrage** : la première info reçue formate toute la suite.
-- En DM : ton icebreaker ancre la conversation. *"Chocolat ou IA ?"* ancre humour-chaleur, pas pitch. C'est volontaire.
+- En DM : ton icebreaker ancre la conversation. Ancre humour-chill, pas vendeur de tapis. C'est volontaire.
 
 **2. Aversion à la perte** : on déteste perdre 2× plus qu'on aime gagner (à montant égal).
 - En Phase 2-3 : faire émerger ce qu'il PERD à ne pas changer (le temps qui passe, les opportunités ratées) = plus puissant que vanter ce qu'il gagnerait à acheter.
